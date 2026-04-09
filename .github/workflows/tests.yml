@@ -1,0 +1,83 @@
+name: Dell E2E Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: "Test: ${{ matrix.test }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        test:
+          - 01-homepage
+          - 02-navigation
+          - 03-search
+          - 04-search-results-filter
+          - 05-product-listing
+          - 06-product-detail
+          - 07-add-to-cart
+          - 08-cart-page
+          - 09-cookie-consent
+          - 10-login
+          - 11-account-dashboard
+          - 12-order-history
+          - 13-breadcrumbs
+          - 14-product-gallery
+          - 15-404-handling
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache node_modules
+        id: node-cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright system deps (cached run)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run test
+        run: npx playwright test tests/${{ matrix.test }}.spec.ts
+        env:
+          DELL_EMAIL: ${{ secrets.DELL_EMAIL }}
+          DELL_PASSWORD: ${{ secrets.DELL_PASSWORD }}
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.test }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
