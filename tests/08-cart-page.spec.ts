@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner } from './helpers/cookies';
+import { dismissCookieBanner, hideAutomation } from './helpers/cookies';
 
 test('cart page loads and shows empty cart or items', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/shop/cart');
   await dismissCookieBanner(page);
 
@@ -14,6 +15,7 @@ test('cart page loads and shows empty cart or items', async ({ page }) => {
 });
 
 test('cart page has checkout button or continue shopping link', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/shop/cart');
   await dismissCookieBanner(page);
 

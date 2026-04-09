@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner } from './helpers/cookies';
+import { dismissCookieBanner, hideAutomation } from './helpers/cookies';
 
 test('breadcrumbs are visible on product listing page', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/shop/laptops-2-in-1-pcs/sc/laptops');
   await dismissCookieBanner(page);
 
@@ -12,6 +13,7 @@ test('breadcrumbs are visible on product listing page', async ({ page }) => {
 });
 
 test('breadcrumbs on product detail page include category and product name', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/shop/laptops-2-in-1-pcs/sc/laptops');
   await dismissCookieBanner(page);
 

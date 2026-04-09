@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner } from './helpers/cookies';
+import { dismissCookieBanner, hideAutomation } from './helpers/cookies';
 
 test('product detail page has a main product image', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/shop/laptops-2-in-1-pcs/sc/laptops');
   await dismissCookieBanner(page);
 
@@ -18,6 +19,7 @@ test('product detail page has a main product image', async ({ page }) => {
 });
 
 test('product gallery has multiple image thumbnails', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/shop/laptops-2-in-1-pcs/sc/laptops');
   await dismissCookieBanner(page);
 

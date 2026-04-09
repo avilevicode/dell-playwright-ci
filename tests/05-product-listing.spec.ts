@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner } from './helpers/cookies';
+import { dismissCookieBanner, hideAutomation } from './helpers/cookies';
 
 test('product listing page shows multiple products', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/shop/laptops-2-in-1-pcs/sc/laptops');
   await dismissCookieBanner(page);
 
@@ -13,6 +14,7 @@ test('product listing page shows multiple products', async ({ page }) => {
 });
 
 test('product listing page shows product prices', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/shop/laptops-2-in-1-pcs/sc/laptops');
   await dismissCookieBanner(page);
 

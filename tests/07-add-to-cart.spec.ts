@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner } from './helpers/cookies';
+import { dismissCookieBanner, hideAutomation } from './helpers/cookies';
 
 test('add to cart button is present on product page', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/shop/laptops-2-in-1-pcs/sc/laptops');
   await dismissCookieBanner(page);
 
@@ -18,6 +19,7 @@ test('add to cart button is present on product page', async ({ page }) => {
 });
 
 test('clicking add to cart updates the cart indicator', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/shop/laptops-2-in-1-pcs/sc/laptops');
   await dismissCookieBanner(page);
 

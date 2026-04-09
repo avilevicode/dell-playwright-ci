@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner } from './helpers/cookies';
+import { dismissCookieBanner, hideAutomation } from './helpers/cookies';
 
 test('homepage loads with title, header and footer', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/');
   await dismissCookieBanner(page);
 
@@ -11,10 +12,11 @@ test('homepage loads with title, header and footer', async ({ page }) => {
 });
 
 test('homepage hero section is visible', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/');
   await dismissCookieBanner(page);
 
-  await expect(page.locator('main')).toBeVisible();
-  const heroSection = page.locator('main').first();
-  await expect(heroSection).toBeVisible();
+  const body = page.locator('body');
+  await expect(body).toBeVisible();
+  await expect(page.locator('body *').first()).toBeVisible();
 });

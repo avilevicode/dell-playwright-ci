@@ -4,16 +4,15 @@ import { dismissCookieBanner } from './helpers/cookies';
 const EMAIL = process.env.DELL_EMAIL ?? '';
 const PASSWORD = process.env.DELL_PASSWORD ?? '';
 
-async function login(page: import('@playwright/test').Page) {
-  await page.goto('/');
-  await dismissCookieBanner(page);
+const LOGIN_URL = 'https://www.dell.com/identity/global/Login?c=uk&l=en&s=bsd';
 
-  const signInLink = page.getByRole('link', { name: /sign in/i })
-    .or(page.getByRole('button', { name: /sign in/i })).first();
-  await signInLink.click();
+async function login(page: import('@playwright/test').Page) {
+  await page.goto(LOGIN_URL);
+  await dismissCookieBanner(page);
   await page.waitForLoadState('domcontentloaded');
 
-  const emailField = page.locator('[type="email"], [name="email"]').first();
+  const emailField = page.locator('[type="email"], [name="email"], [id*="email" i]').first();
+  await expect(emailField).toBeVisible({ timeout: 15000 });
   await emailField.fill(EMAIL);
 
   const nextBtn = page.getByRole('button', { name: /next|continue/i }).first();

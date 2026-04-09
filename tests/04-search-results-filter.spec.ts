@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner } from './helpers/cookies';
+import { dismissCookieBanner, hideAutomation } from './helpers/cookies';
 
 test('search results page has filter options', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/search/results?q=laptop');
   await dismissCookieBanner(page);
 
@@ -12,6 +13,7 @@ test('search results page has filter options', async ({ page }) => {
 });
 
 test('applying a filter updates results', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/shop/laptops-2-in-1-pcs/sc/laptops');
   await dismissCookieBanner(page);
 

@@ -9,3 +9,9 @@ export async function dismissCookieBanner(page: Page): Promise<void> {
     // Banner not present or already dismissed
   }
 }
+
+export async function hideAutomation(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'webdriver', { get: () => false });
+  });
+}

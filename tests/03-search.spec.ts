@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner } from './helpers/cookies';
+import { dismissCookieBanner, hideAutomation } from './helpers/cookies';
 
 test('search bar is present on homepage', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/');
   await dismissCookieBanner(page);
 
@@ -10,6 +11,7 @@ test('search bar is present on homepage', async ({ page }) => {
 });
 
 test('searching for a product returns results', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/search/results?q=laptop');
   await dismissCookieBanner(page);
 

@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
+import { hideAutomation } from './helpers/cookies';
 
 test('cookie consent banner appears on first visit', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/');
 
   const cookieBanner = page.locator('[id*="cookie"], [class*="cookie"], [id*="consent"], [class*="consent"]').first();
@@ -8,6 +10,7 @@ test('cookie consent banner appears on first visit', async ({ page }) => {
 });
 
 test('accepting cookies dismisses the banner', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/');
 
   const acceptBtn = page.getByRole('button', { name: /accept all cookies/i });

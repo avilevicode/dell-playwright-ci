@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner } from './helpers/cookies';
+import { dismissCookieBanner, hideAutomation } from './helpers/cookies';
 
 test('main navigation is visible and contains key links', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/');
   await dismissCookieBanner(page);
 
@@ -10,6 +11,7 @@ test('main navigation is visible and contains key links', async ({ page }) => {
 });
 
 test('navigating to laptops section loads product results', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/shop/laptops-2-in-1-pcs/sc/laptops');
   await dismissCookieBanner(page);
 

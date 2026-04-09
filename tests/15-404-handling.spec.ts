@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { dismissCookieBanner } from './helpers/cookies';
+import { dismissCookieBanner, hideAutomation } from './helpers/cookies';
 
 test('non-existent page returns a 404 or error page', async ({ page }) => {
+  await hideAutomation(page);
   const response = await page.goto('/this-page-does-not-exist-xyz-12345');
   await dismissCookieBanner(page);
 
@@ -17,6 +18,7 @@ test('non-existent page returns a 404 or error page', async ({ page }) => {
 });
 
 test('404 page contains a link back to the homepage', async ({ page }) => {
+  await hideAutomation(page);
   await page.goto('/this-page-does-not-exist-xyz-12345');
   await dismissCookieBanner(page);
 
