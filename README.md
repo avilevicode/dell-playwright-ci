@@ -1,6 +1,6 @@
 # dell-playwright-ci
 
-![Tests](https://github.com/<YOUR_GITHUB_USERNAME>/dell-playwright-ci/actions/workflows/tests.yml/badge.svg)
+![Tests](https://github.com/avilevicode/dell-playwright-ci/actions/workflows/tests.yml/badge.svg)
 
 End-to-end test suite for [Dell UK](https://www.dell.com/en-uk) using Playwright, running as 15 parallel GitHub Actions jobs on `ubuntu-latest`.
 
