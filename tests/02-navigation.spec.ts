@@ -7,5 +7,5 @@ test('homepage redirects to a locale URL', async ({ page }) => {
 
 test('header element is present on homepage', async ({ page }) => {
   await page.goto('https://www.dell.com/en-uk');
-  await expect(page.locator('header')).toBeVisible({ timeout: 15000 });
+  await expect(page.locator('header').first()).toBeVisible({ timeout: 15000 });
 });
