@@ -1,0 +1,63 @@
+name: Multi-Runner Demo
+
+# Demonstrates running the same test across different machine specs.
+# ubuntu-latest runs on GitHub-hosted runners.
+# The other two require self-hosted runners registered with matching labels.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 9 * * 1'   # Every Monday at 09:00 UTC
+
+jobs:
+  test:
+    name: "Runner: ${{ matrix.label }}"
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            label: "GitHub-hosted (4 CPUs / 16 GB RAM)"
+          - runner: ubuntu_1_cpu_1_5_gb_ram
+            label: "Self-hosted (1 CPU / 1.5 GB RAM)"
+          - runner: ubuntu_0_5_cpu_1_gb_ram
+            label: "Self-hosted (0.5 CPU / 1 GB RAM)"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log machine specs
+        run: |
+          echo "## Runner: ${{ matrix.label }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| CPUs | $(nproc) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Memory | $(free -h | awk '/^Mem:/ {print \$2}') |" >> $GITHUB_STEP_SUMMARY
+          echo "| Kernel | $(uname -r) |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache node_modules
+        id: node-cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run homepage test
+        run: npx playwright test tests/01-homepage.spec.ts
