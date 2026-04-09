@@ -18,7 +18,7 @@ jobs:
     name: "Test: ${{ matrix.test }}"
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.49.0-noble
+      image: mcr.microsoft.com/playwright:v1.59.1-noble
     strategy:
       fail-fast: false
       matrix:
@@ -72,7 +72,7 @@ jobs:
     name: "Publish Report"
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.49.0-noble
+      image: mcr.microsoft.com/playwright:v1.59.1-noble
     needs: test
     if: always()
     permissions:
