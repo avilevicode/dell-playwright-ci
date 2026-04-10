@@ -26,10 +26,26 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  run:
+  # Containerised run: uses the official Playwright Docker image.
+  # No browser install needed — the image ships with Chromium pre-installed.
+  # Used for GitHub-hosted runners and any runner with Docker available.
+  run-docker:
+    if: ${{ inputs.runner != 'self-hosted' }}
+    uses: ./.github/workflows/run-tests-docker.yml
+    with:
+      base-url: ${{ inputs.base-url || 'https://www.dell.com/en-uk' }}
+    secrets:
+      DELL_EMAIL: ${{ secrets.DELL_EMAIL }}
+      DELL_PASSWORD: ${{ secrets.DELL_PASSWORD }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # Self-hosted run: installs browsers on the runner with caching.
+  # Used for internal VMs where Docker may not be available.
+  run-self-hosted:
+    if: ${{ inputs.runner == 'self-hosted' }}
     uses: ./.github/workflows/run-tests.yml
     with:
-      runner: ${{ inputs.runner || 'ubuntu-latest' }}
+      runner: self-hosted
       base-url: ${{ inputs.base-url || 'https://www.dell.com/en-uk' }}
     secrets:
       DELL_EMAIL: ${{ secrets.DELL_EMAIL }}
