@@ -9,7 +9,7 @@ export default defineConfig({
     ? [['blob'], ['list']]
     : [['html', { open: 'never' }], ['list']],
   use: {
-    baseURL: 'https://www.dell.com/en-uk',
+    baseURL: process.env.BASE_URL || 'https://www.dell.com/en-uk',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'on-first-retry',
