@@ -21,6 +21,10 @@ on:
         type: string
         default: 'https://www.dell.com/en-uk'
 
+permissions:
+  pages: write
+  id-token: write
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
