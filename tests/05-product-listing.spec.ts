@@ -7,9 +7,8 @@ test('laptops listing page loads successfully', async ({ page }) => {
   expect(response?.status()).toBeLessThan(400);
 });
 
-test('laptops listing page shows products', async ({ page }) => {
+test('laptops listing page shows a heading', async ({ page }) => {
   await dismissCookieBanner(page);
   await page.goto('/en-uk/shop/laptops/ac/5');
-  await expect(page.locator('body')).toBeVisible();
-  await expect(page.locator('h1, h2, h3').first()).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole('heading').first()).toBeVisible({ timeout: 15000 });
 });
