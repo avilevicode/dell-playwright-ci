@@ -1,11 +1,15 @@
 import { test, expect } from '@playwright/test';
+import { dismissCookieBanner } from './helpers/cookies';
 
-test('support page loads successfully', async ({ page }) => {
-  const response = await page.goto('https://www.dell.com/en-uk/dt/support/index.htm');
-  expect(response?.status()).toBeLessThan(500);
+test('laptops listing page loads successfully', async ({ page }) => {
+  await dismissCookieBanner(page);
+  const response = await page.goto('/en-uk/shop/laptops/ac/5');
+  expect(response?.status()).toBeLessThan(400);
 });
 
-test('support page has a body', async ({ page }) => {
-  await page.goto('https://www.dell.com/en-uk/dt/support/index.htm');
+test('laptops listing page shows products', async ({ page }) => {
+  await dismissCookieBanner(page);
+  await page.goto('/en-uk/shop/laptops/ac/5');
   await expect(page.locator('body')).toBeVisible();
+  await expect(page.locator('h1, h2, h3').first()).toBeVisible({ timeout: 15000 });
 });
