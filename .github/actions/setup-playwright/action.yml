@@ -1,0 +1,44 @@
+# Composite action — the "Lego brick" layer of the platform.
+# Handles the repeated setup steps so reusable workflows stay focused on policy,
+# not boilerplate. Compare with run-tests.yml which calls this action.
+#
+# Composite actions run inside the calling job and share its runner + environment.
+# Use composite for step-level reuse; use workflow_call for job-level reuse.
+
+name: Setup Playwright
+description: Checkout, install Node dependencies, and cache Playwright browsers.
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+    - name: Setup Node.js 22
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      with:
+        node-version: '22'
+
+    - name: Cache node_modules
+      id: node-cache
+      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e4b53 # v4.2.3
+      with:
+        path: node_modules
+        key: node-${{ hashFiles('package-lock.json') }}
+
+    - name: Install dependencies
+      if: steps.node-cache.outputs.cache-hit != 'true'
+      run: npm ci
+      shell: bash
+
+    - name: Cache Playwright browsers
+      id: browser-cache
+      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e4b53 # v4.2.3
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ hashFiles('package-lock.json') }}
+
+    - name: Install Playwright browsers
+      if: steps.browser-cache.outputs.cache-hit != 'true'
+      run: npx playwright install --with-deps chromium
+      shell: bash
