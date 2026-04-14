@@ -11,8 +11,9 @@ test('breadcrumb navigation is present on category page', async ({ page }) => {
 test('breadcrumb contains at least two levels', async ({ page }) => {
   await dismissCookieBanner(page);
   await page.goto('/en-uk/shop/laptops/xps/ac/5');
-  const breadcrumbLinks = page.locator('[class*="breadcrumb"] a, nav[aria-label*="breadcrumb"] a, ol[aria-label*="breadcrumb"] a');
-  await expect(breadcrumbLinks.first()).toBeVisible({ timeout: 15000 });
-  const count = await breadcrumbLinks.count();
+  // Count all breadcrumb items — links AND the current-page span (which is not an <a>).
+  const breadcrumbItems = page.locator('[class*="breadcrumb"] li, [class*="breadcrumb"] [class*="item"], nav[aria-label*="breadcrumb"] li, ol[aria-label*="breadcrumb"] li');
+  await expect(breadcrumbItems.first()).toBeVisible({ timeout: 15000 });
+  const count = await breadcrumbItems.count();
   expect(count).toBeGreaterThan(1);
 });
